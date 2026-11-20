@@ -10,7 +10,6 @@
 package com.cburch.logisim.circuit;
 
 import com.cburch.logisim.comp.ComponentDrawContext;
-import com.cburch.logisim.comp.Palette;
 import com.cburch.logisim.data.Direction;
 import com.cburch.logisim.data.Location;
 import com.cburch.logisim.data.Value;
@@ -51,7 +50,7 @@ class SplitterPainter {
     }
 
     final var g = context.getGraphics().create();
-    g.setColor(Palette.of(context).stroke());
+    g.setColor(new Color(AppPreferences.COMPONENT_COLOR.get()));
     final var font = g.getFont();
     g.setFont(font.deriveFont(7.0f));
 
@@ -92,9 +91,8 @@ class SplitterPainter {
     final var facing = attrs.facing;
     final var fanout = attrs.fanout;
     final var parms = attrs.getParameters();
-    final var strokeColor = Palette.of(context).stroke();
 
-    g.setColor(strokeColor);
+    g.setColor(Value.multiColor);
     final var x0 = origin.getX();
     final var y0 = origin.getY();
     final var x1 = x0 + parms.getEnd0X();
@@ -108,10 +106,8 @@ class SplitterPainter {
       var xi = x1;
       var yi = y1;
       for (int i = 1; i <= fanout; i++) {
-        if (context.getShowState() && state != null) {
+        if (context.getShowState()) {
           g.setColor(state.getValue(Location.create(xi, yi, true)).getColor());
-        } else {
-          g.setColor(strokeColor);
         }
         final var xSpine = xi + (xi == x0 ? 0 : (xi < x0 ? 10 : -10));
         g.drawLine(xi, yi, xSpine, ySpine);
@@ -120,11 +116,11 @@ class SplitterPainter {
       }
       if (fanout > 3) {
         GraphicsUtil.switchToWidth(g, SPINE_WIDTH);
-        g.setColor(strokeColor);
+        g.setColor(Value.multiColor);
         g.drawLine(
             x1 + (dx > 0 ? 10 : -10), ySpine, x1 + (fanout - 1) * dx + (dx > 0 ? 10 : -10), ySpine);
       } else {
-        g.setColor(strokeColor);
+        g.setColor(Value.multiColor);
         g.fillOval(x0 - SPINE_DOT / 2, ySpine - SPINE_DOT / 2, SPINE_DOT, SPINE_DOT);
       }
     } else {
@@ -134,10 +130,8 @@ class SplitterPainter {
       var xi = x1;
       var yi = y1;
       for (int i = 1; i <= fanout; i++) {
-        if (context.getShowState() && state != null) {
+        if (context.getShowState()) {
           g.setColor(state.getValue(Location.create(xi, yi, true)).getColor());
-        } else {
-          g.setColor(strokeColor);
         }
         final var ySpine = yi + (yi == y0 ? 0 : (yi < y0 ? 10 : -10));
         g.drawLine(xi, yi, xSpine, ySpine);
@@ -146,11 +140,11 @@ class SplitterPainter {
       }
       if (fanout >= 3) {
         GraphicsUtil.switchToWidth(g, SPINE_WIDTH);
-        g.setColor(strokeColor);
+        g.setColor(Value.multiColor);
         g.drawLine(
             xSpine, y1 + (dy > 0 ? 10 : -10), xSpine, y1 + (fanout - 1) * dy + (dy > 0 ? 10 : -10));
       } else {
-        g.setColor(strokeColor);
+        g.setColor(Value.multiColor);
         g.fillOval(xSpine - SPINE_DOT / 2, y0 - SPINE_DOT / 2, SPINE_DOT, SPINE_DOT);
       }
     }
@@ -180,16 +174,10 @@ class SplitterPainter {
 
     final var g = context.getGraphics();
     final var oldColor = g.getColor();
-    final var strokeColor = Palette.of(context).stroke();
-
-    GraphicsUtil.switchToWidth(g, Wire.WIDTH);
-    g.setColor(strokeColor);
     for (int i = 0, n = attrs.fanout; i < n; i++) {
       if (showState) {
         final var val = state.getValue(Location.create(x, y, true));
         g.setColor(val.getColor());
-      } else {
-        g.setColor(strokeColor);
       }
       final var width = endBitCounts[i + 1] >= 2 ? Wire.WIDTH_BUS : Wire.WIDTH;
       GraphicsUtil.switchToWidth(g, width);
@@ -198,7 +186,7 @@ class SplitterPainter {
       y += dy;
     }
     GraphicsUtil.switchToWidth(g, SPINE_WIDTH);
-    g.setColor(strokeColor);
+    g.setColor(Value.multiColor);
     var spine0x = x0 + parms.getSpine0X();
     var spine0y = y0 + parms.getSpine0Y();
     var spine1x = x0 + parms.getSpine1X();
