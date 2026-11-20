@@ -402,12 +402,13 @@ public class SimOptions extends OptionsPanel {
   }
 
   private void setColorBlind() {
+    final var isDark = AppPreferences.isDarkTheme(AppPreferences.LookAndFeel.get());
     AppPreferences.TRUE_COLOR.set(0xF4EB42);
     AppPreferences.FALSE_COLOR.set(0x203BE8);
     AppPreferences.UNKNOWN_COLOR.set(0x01BC9D);
     AppPreferences.ERROR_COLOR.set(0x00C10000);
     AppPreferences.NIL_COLOR.set(0x818181);
-    AppPreferences.BUS_COLOR.set(1);
+    AppPreferences.BUS_COLOR.set(isDark ? AppPreferences.DARK_BUS_COLOR : 1);
     AppPreferences.STROKE_COLOR.set(0xBBBBBB);
     AppPreferences.WIDTH_ERROR_COLOR.set(0xC413DB);
     AppPreferences.WIDTH_ERROR_CAPTION_COLOR.set(0x560000);
